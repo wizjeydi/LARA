@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root { --navy:#0b2545; --ocean:#087eae; --aqua:#32c5d2; --light:#eaf7fc; --ink:#172b4d; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:#f5f8fc; color:var(--ink); }
+* { box-sizing:border-box; }
+section { scroll-margin-top:80px; }
+.container-pad { width:min(1180px, calc(100% - 40px)); margin-inline:auto; }
+.card-shadow { box-shadow:0 14px 40px rgba(11,37,69,.08); }
+.wave-line { background-image:radial-gradient(circle at 10px -2px, transparent 12px, rgba(50,197,210,.28) 13px, rgba(50,197,210,.28) 14px, transparent 15px); background-size:22px 12px; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.animate-float { animation:float 4s ease-in-out infinite; }
+@media (max-width:640px) { .container-pad { width:min(100% - 32px, 1180px); } }
