@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUp, Award, ChevronDown, Clock3, Facebook, Instagram, Mail, MapPin, Menu, Phone, ShieldCheck, Target, Trophy, X, Youtube } from "lucide-react";
+import { ArrowDown, ArrowUp, Award, ChevronDown, Clock3, Facebook, Instagram, Mail, MapPin, Menu, Phone, ShieldCheck, Target, Trophy, UserRound, X, Youtube } from "lucide-react";
 
 const photo = (id: string, w = 1400) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=82`;
 
@@ -89,14 +90,20 @@ export default function LaraWebsitePremium() {
 
   return (
     <main className="overflow-hidden bg-[#f7f7f4] text-[#171b24]">
-      <nav className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled ? "border-b border-[#d7bd7a]/30 bg-[#090f20]/95 shadow-xl backdrop-blur-lg" : "border-b border-white/10 bg-transparent"}`}>
+      <nav aria-label="Main navigation" className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled ? "border-b border-[#d7bd7a]/30 bg-[#090f20]/95 shadow-xl backdrop-blur-lg" : "border-b border-[#d7bd7a]/25 bg-[#090f20]/90 backdrop-blur-lg"}`}>
         <div className="container-pad flex h-[82px] items-center justify-between text-white">
           <Brand light />
-          <div className="hidden items-center gap-7 lg:flex">{nav.map(([label, id]) => <a key={id} href={`#${id}`} className="text-[12px] font-bold tracking-[1px] text-white/85 transition hover:text-[#d7bd7a]">{label.toUpperCase()}</a>)}</div>
+          <div className="hidden items-center gap-7 lg:flex">
+            {nav.map(([label, id]) => <a key={id} href={`#${id}`} className="text-[12px] font-bold tracking-[1px] text-white/85 transition hover:text-[#d7bd7a]">{label.toUpperCase()}</a>)}
+            <Link href="/login" className="text-[12px] font-bold tracking-[1px] text-white/85 transition hover:text-[#d7bd7a]">PORTAL</Link>
+          </div>
           <a href="#contact" className="hidden border border-[#d7bd7a] px-5 py-3 text-[11px] font-black tracking-[2px] text-[#d7bd7a] transition hover:bg-[#d7bd7a] hover:text-[#090f20] lg:block">ENROLL NOW</a>
           <button aria-label="Toggle navigation" onClick={() => setMenu(!menu)} className="lg:hidden">{menu ? <X /> : <Menu />}</button>
         </div>
-        <div className={`overflow-hidden bg-[#090f20] text-white transition-all lg:hidden ${menu ? "max-h-96" : "max-h-0"}`}>{nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenu(false)} className="block border-t border-white/10 px-6 py-4 text-xs font-bold tracking-[2px]">{label.toUpperCase()}</a>)}</div>
+        <div className={`overflow-hidden bg-[#090f20] text-white transition-all lg:hidden ${menu ? "max-h-96" : "max-h-0"}`}>
+          {nav.map(([label, id]) => <a key={id} href={`#${id}`} onClick={() => setMenu(false)} className="block border-t border-white/10 px-6 py-4 text-xs font-bold tracking-[2px]">{label.toUpperCase()}</a>)}
+          <Link href="/login" onClick={() => setMenu(false)} className="block border-t border-white/10 px-6 py-4 text-xs font-bold tracking-[2px]">PORTAL</Link>
+        </div>
       </nav>
 
       <section id="home" className="relative min-h-[780px] bg-cover bg-[70%_center] md:bg-center" style={{ backgroundImage: `linear-gradient(90deg,rgba(5,10,24,.94) 0%,rgba(5,10,24,.68) 48%,rgba(5,10,24,.12) 100%),url('/LARAbg.jpg')` }}>
@@ -118,7 +125,7 @@ export default function LaraWebsitePremium() {
 
       <section className="bg-[#090f20] py-24 text-white"><div className="container-pad"><div className="mb-12"><p className="text-[11px] font-bold tracking-[4px] text-[#d7bd7a]">THE LSC STANDARD</p><h2 className="mt-3 text-4xl font-black md:text-6xl">WHY SWIM WITH LARA?</h2></div><div className="grid gap-px border border-white/10 bg-white/10 md:grid-cols-2 lg:grid-cols-4">{[[ShieldCheck,"PROFESSIONAL GUIDANCE","Expert instruction focused on safe, confident development."],[Target,"SKILL DEVELOPMENT","Purposeful progression across every swimming ability."],[Award,"WATER SAFETY","A strong culture of awareness and responsible practice."],[Trophy,"CONFIDENCE & DISCIPLINE","Personal growth that reaches beyond the pool."]].map(([Icon,title,text]: any)=><div key={title} className="bg-[#090f20] p-8"><div className="grid h-14 w-14 place-items-center border border-[#d7bd7a]/50 text-[#d7bd7a]"><Icon/></div><h3 className="mt-7 text-[14px] font-black tracking-[1px]">{title}</h3><p className="mt-3 text-sm leading-7 text-white/55">{text}</p></div>)}</div></div></section>
 
-      <section id="coaches" className="bg-white py-24"><div className="container-pad"><div className="mb-12 text-center"><p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">OUR TEAM</p><h2 className="mt-3 text-4xl font-black text-[#090f20] md:text-6xl">GUIDED BY PASSION.<br/>TRAINED WITH PURPOSE.</h2></div><div className="grid gap-5 md:grid-cols-3">{["photo-1560250097-0b93528c311a","photo-1534528741775-53994a69daeb","photo-1500648767791-00dcc994a43e"].map((img,i)=><article key={img} className="group border border-[#090f20]/8"><div className="h-[390px] overflow-hidden"><img src={photo(img,900)} alt="Coach profile placeholder" className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0"/></div><div className="p-6"><p className="text-[10px] font-black tracking-[2px] text-[#b28a43]">{i===0?"HEAD SWIMMING COACH":i===1?"DEVELOPMENT COACH":"AQUATIC COACH"}</p><h3 className="mt-2 text-xl font-black text-[#090f20]">Coach Name</h3><p className="mt-3 text-sm leading-6 text-slate-600">Sample profile. Replace with an approved coach biography and qualifications.</p><a href="#contact" className="mt-5 inline-block text-xs font-black text-[#090f20]">VIEW PROFILE →</a></div></article>)}</div></div></section>
+      <section id="coaches" className="bg-white py-24"><div className="container-pad"><div className="mb-12 text-center"><p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">OUR TEAM</p><h2 className="mt-3 text-4xl font-black text-[#090f20] md:text-6xl">GUIDED BY PASSION.<br/>TRAINED WITH PURPOSE.</h2></div><div className="grid gap-5 md:grid-cols-3">{["HEAD SWIMMING COACH","DEVELOPMENT COACH","AQUATIC COACH"].map((role)=><article key={role} className="border border-[#090f20]/8"><div role="img" aria-label="No coach profile picture available" className="flex h-[390px] flex-col items-center justify-center gap-4 bg-[#090f20]/[.04] text-[#8c6827]"><UserRound size={72} strokeWidth={1.3} aria-hidden="true"/><span className="text-[11px] font-bold tracking-[2px]">NO PROFILE PICTURE</span></div><div className="p-6"><p className="text-[10px] font-black tracking-[2px] text-[#b28a43]">{role}</p><h3 className="mt-2 text-xl font-black text-[#090f20]">Coach Name</h3><p className="mt-3 text-sm leading-6 text-slate-600">Sample profile. Replace with an approved coach biography and qualifications.</p><a href="#contact" className="mt-5 inline-block text-xs font-black text-[#090f20]">VIEW PROFILE →</a></div></article>)}</div></div></section>
 
       <section id="achievements" className="py-24"><div className="container-pad"><div className="mb-12"><p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">ACHIEVEMENTS & GALLERY</p><h2 className="mt-3 text-4xl font-black text-[#090f20] md:text-6xl">EVERY STROKE TELLS A STORY.</h2></div><div id="gallery" className="grid auto-rows-[220px] grid-cols-2 gap-3 md:grid-cols-4">{gallery.map((g,i)=><button key={g} onClick={()=>setLightbox(photo(g))} className={`overflow-hidden ${i===0||i===3?"md:row-span-2":""} ${i===0||i===5?"md:col-span-2":""}`}><img src={photo(g,900)} alt="Swimming gallery" className="h-full w-full object-cover grayscale-[20%] transition duration-500 hover:scale-105 hover:grayscale-0"/></button>)}</div></div></section>
 
