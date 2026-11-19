@@ -40,6 +40,36 @@ export default function LaraWebsitePremium() {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+
+    const revealTargets = document.querySelectorAll<HTMLElement>(
+      "main > section:not(#home) .container-pad > *, main > section:not(#home) .container-pad > .grid > *",
+    );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -48px 0px" },
+    );
+
+    revealTargets.forEach((element) => {
+      const siblingIndex = element.parentElement
+        ? Array.from(element.parentElement.children).indexOf(element)
+        : 0;
+      element.style.setProperty("--scroll-reveal-delay", `${Math.min(siblingIndex, 4) * 80}ms`);
+      element.classList.add("scroll-reveal");
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const nav = [["Home", "home"], ["About", "about"], ["Programs", "programs"], ["Coaches", "coaches"], ["Achievements", "achievements"], ["Contact", "contact"]];
   const faqs = [
     ["Who can enroll in LARA Swim School?", "Students of different ages and abilities may apply. Exact placement is confirmed during assessment."],
@@ -96,9 +126,115 @@ export default function LaraWebsitePremium() {
 
       <section className="relative grid min-h-[440px] place-items-center bg-cover bg-center text-center text-white" style={{backgroundImage:`linear-gradient(rgba(5,10,24,.86),rgba(5,10,24,.86)),url('${photo("photo-1560089000-7433a4ebbd64")}')`}}><div className="container-pad"><p className="text-[11px] font-bold tracking-[5px] text-[#d7bd7a]">YOUR NEXT MOVE</p><h2 className="mt-4 text-4xl font-black md:text-7xl">READY TO MAKE WAVES?</h2><p className="mx-auto mt-5 max-w-2xl leading-7 text-white/70">Take the first step toward confidence, skill, and excellence in the water.</p><div className="mt-8 flex justify-center gap-4"><a href="#contact" className="bg-[#d7bd7a] px-7 py-4 text-xs font-black tracking-[2px] text-[#090f20]">INQUIRE NOW</a><a href="#contact" className="border border-white/50 px-7 py-4 text-xs font-black tracking-[2px]">ENROLL TODAY</a></div></div></section>
 
-      <section className="bg-white py-24"><div className="container-pad max-w-[900px]"><div className="mb-10 text-center"><p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">QUESTIONS</p><h2 className="mt-3 text-4xl font-black text-[#090f20]">FREQUENTLY ASKED QUESTIONS</h2></div>{faqs.map(([q,a],i)=><div key={q} className="mb-3 border border-[#090f20]/10 bg-[#f7f7f4]"><button onClick={()=>setFaq(faq===i?-1:i)} className="flex w-full items-center justify-between px-6 py-5 text-left font-black text-[#090f20]"><span>{q}</span><ChevronDown className={`transition ${faq===i?"rotate-180 text-[#b28a43]":""}`}/></button><div className={`grid transition-all ${faq===i?"grid-rows-[1fr]":"grid-rows-[0fr]"}`}><p className="overflow-hidden px-6 pb-5 text-sm leading-7 text-slate-600"><span className="block">{a}</span></p></div></div>)}</div></section>
+      <section className="bg-white py-24">
+        <div className="container-pad max-w-[900px]">
+          <div className="mb-10 text-center">
+            <p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">QUESTIONS</p>
+            <h2 className="mt-3 text-3xl font-black leading-tight text-[#090f20] md:text-4xl">FREQUENTLY ASKED QUESTIONS</h2>
+          </div>
+          {faqs.map(([q, a], i) => {
+            const isOpen = faq === i;
 
-      <section id="contact" className="bg-[#f7f7f4] py-24"><div className="container-pad"><div className="mb-12"><p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">CONTACT US</p><h2 className="mt-3 text-4xl font-black text-[#090f20] md:text-6xl">LET'S GET YOU STARTED.</h2></div><div className="grid overflow-hidden border border-[#090f20]/10 bg-white lg:grid-cols-[.85fr_1.15fr]"><div className="bg-[#090f20] p-8 text-white md:p-12"><h3 className="text-2xl font-black">Swim School Information</h3><div className="mt-8 space-y-5 text-sm"><p className="flex gap-3"><MapPin className="shrink-0 text-[#d7bd7a]"/>[School Address]<br/>[City, Province]</p><p className="flex gap-3"><Phone className="text-[#d7bd7a]"/>+63 XXX XXX XXXX</p><p className="flex gap-3"><Mail className="text-[#d7bd7a]"/>hello@laraswim.school</p><p className="flex gap-3"><Clock3 className="text-[#d7bd7a]"/>Mon–Sat: 7:00 AM–7:00 PM</p></div><div className="mt-8 h-48 border border-white/10 grid place-items-center text-center text-xs text-white/50"><MapPin className="mx-auto mb-2 text-[#d7bd7a]"/>Map placeholder</div></div><form onSubmit={submit} className="p-8 md:p-12"><div className="grid gap-5 sm:grid-cols-2"><label className="text-xs font-black tracking-[1px]">FULL NAME<input required className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]"/></label><label className="text-xs font-black tracking-[1px]">CONTACT NUMBER<input required pattern="[0-9+() -]{7,}" className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]"/></label><label className="text-xs font-black tracking-[1px]">EMAIL ADDRESS<input required type="email" className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]"/></label><label className="text-xs font-black tracking-[1px]">STUDENT'S AGE<input required type="number" min="1" className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]"/></label><label className="text-xs font-black tracking-[1px]">PREFERRED PROGRAM<select required className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal"><option value="">Select program</option>{programs.map(p=><option key={p[0]}>{p[0]}</option>)}</select></label><label className="text-xs font-black tracking-[1px]">TRAINING SCHEDULE<select required className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal"><option value="">Select schedule</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label></div><label className="mt-5 block text-xs font-black tracking-[1px]">MESSAGE<textarea required rows={4} className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]"/></label><div className="mt-5 flex items-center gap-4"><button type="submit" className="bg-[#090f20] px-7 py-4 text-xs font-black tracking-[2px] text-white">SUBMIT INQUIRY</button><button type="reset" className="text-xs font-black text-slate-500">CLEAR</button></div></form></div></div></section>
+            return (
+              <div
+                key={q}
+                className={`mb-3 overflow-hidden rounded-xl border bg-white shadow-sm transition duration-300 ${
+                  isOpen ? "border-[#d7bd7a]/70 shadow-md" : "border-[#090f20]/10 hover:border-[#d7bd7a]/50"
+                }`}
+              >
+                <button
+                  id={`faq-question-${i}`}
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                  onClick={() => setFaq(isOpen ? -1 : i)}
+                  className="group flex w-full items-center gap-4 px-5 py-5 text-left text-sm font-black text-[#090f20] transition-colors hover:bg-[#fcfbf7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#b28a43] sm:px-7"
+                >
+                  <span className="flex-1 leading-6">{q}</span>
+                  <span
+                    className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-colors ${
+                      isOpen
+                        ? "bg-[#d7bd7a]/25 text-[#8c6827]"
+                        : "bg-[#090f20]/5 text-[#090f20]/60 group-hover:bg-[#d7bd7a]/25 group-hover:text-[#8c6827]"
+                    }`}
+                  >
+                    <ChevronDown
+                      aria-hidden="true"
+                      size={18}
+                      className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                    />
+                  </span>
+                </button>
+                <div
+                  id={`faq-answer-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-question-${i}`}
+                  aria-hidden={!isOpen}
+                  className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none ${
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="min-h-0 overflow-hidden">
+                    <p className="px-5 pb-5 text-sm leading-7 text-slate-600 sm:px-7">{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="contact" className="bg-[#f7f7f4] py-24">
+        <div className="container-pad">
+          <div className="mb-12">
+            <p className="text-[11px] font-bold tracking-[4px] text-[#b28a43]">CONTACT US</p>
+            <h2 className="mt-3 text-4xl font-black text-[#090f20] md:text-6xl">LET&apos;S GET YOU STARTED.</h2>
+          </div>
+          <div className="grid overflow-hidden border border-[#090f20]/10 bg-white lg:grid-cols-[.85fr_1.15fr]">
+            <div className="bg-[#090f20] p-8 text-white md:p-12">
+              <h3 className="text-2xl font-black">Swim School Information</h3>
+              <div className="mt-8 space-y-5 text-sm">
+                <p className="flex gap-3"><MapPin className="shrink-0 text-[#d7bd7a]" />[School Address]<br />[City, Province]</p>
+                <p className="flex gap-3"><Phone className="text-[#d7bd7a]" />+63 XXX XXX XXXX</p>
+                <p className="flex gap-3"><Mail className="text-[#d7bd7a]" />hello@laraswim.school</p>
+                <p className="flex gap-3"><Clock3 className="text-[#d7bd7a]" />Mon–Sat: 7:00 AM–7:00 PM</p>
+              </div>
+            </div>
+            <form onSubmit={submit} className="p-8 md:p-12">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="text-xs font-black tracking-[1px]">FULL NAME<input required className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]" /></label>
+                <label className="text-xs font-black tracking-[1px]">CONTACT NUMBER<input required pattern="[0-9+() -]{7,}" className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]" /></label>
+                <label className="text-xs font-black tracking-[1px]">EMAIL ADDRESS<input required type="email" className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]" /></label>
+                <label className="text-xs font-black tracking-[1px]">STUDENT&apos;S AGE<input required type="number" min="1" className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]" /></label>
+                <label className="text-xs font-black tracking-[1px]">
+                  PREFERRED PROGRAM
+                  <select required className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal">
+                    <option value="">Select program</option>
+                    {programs.map((program) => <option key={program[0]}>{program[0]}</option>)}
+                  </select>
+                </label>
+                <label className="text-xs font-black tracking-[1px]">
+                  TRAINING SCHEDULE
+                  <select required className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal">
+                    <option value="">Select schedule</option>
+                    <option>Morning</option>
+                    <option>Afternoon</option>
+                    <option>Evening</option>
+                  </select>
+                </label>
+              </div>
+              <label className="mt-5 block text-xs font-black tracking-[1px]">
+                MESSAGE
+                <textarea required rows={4} className="mt-2 w-full border border-[#090f20]/15 px-4 py-3 font-normal outline-none focus:border-[#b28a43]" />
+              </label>
+              <div className="mt-5 flex items-center gap-4">
+                <button type="submit" className="bg-[#090f20] px-7 py-4 text-xs font-black tracking-[2px] text-white">SUBMIT INQUIRY</button>
+                <button type="reset" className="text-xs font-black text-slate-500">CLEAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
 
       {sent&&<div className="fixed bottom-6 right-6 z-[70] border-l-4 border-[#d7bd7a] bg-[#090f20] px-5 py-4 text-sm text-white shadow-xl">Inquiry form completed. No information was sent.</div>}
       {lightbox&&<div onClick={()=>setLightbox(null)} className="fixed inset-0 z-[80] grid place-items-center bg-[#090f20]/95 p-6"><button aria-label="Close image" className="absolute right-6 top-6 text-[#d7bd7a]"><X/></button><img src={lightbox} alt="Gallery enlarged view" className="max-h-[85vh] max-w-full"/></div>}
