@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LARA Swim School Website
 
 A complete responsive public-facing Next.js website for LARA Swim School.
@@ -28,3 +29,6 @@ Open `http://localhost:3000`.
 npm run build
 npm start
 ```
+=======
+# LARA
+>>>>>>> f5752bf0a2a8d6de86ca7cfe34b0344b6506ed8e
