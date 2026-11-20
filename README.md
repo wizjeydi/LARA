@@ -22,6 +22,12 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+## Supabase setup
+
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local` for local development and in the deployment platform's environment variables for production. The local `.env.local` file is ignored by Git.
+
+Supabase browser and server clients are provided in `src/utils/supabase/`. `src/proxy.ts` uses the Next.js 16 Proxy convention to refresh auth cookies. The admin dashboard currently uses browser-local preview data; connecting its CRUD screens to Supabase requires school tables and row-level security policies.
+
 ## Production
 
 ```bash
